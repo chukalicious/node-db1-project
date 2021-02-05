@@ -34,26 +34,39 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/:id", (req, res) => {});
+router.post("/", (req, res) => {
+  const accountBody = req.body;
+  if (!accountBody.name || !accountBody.budget) {
+    res
+      .status(400)
+      .json({ massage: "you must include an account name and a budget" });
+  } else {
+    Accounts.post(accountBody)
+      .then((account) => {
+        res.status(200).json(account);
+      })
+      .catch((err) => res.status(500).json({ message: err.message }));
+  }
+});
 
 router.put("/:id", (req, res) => {});
 
 router.delete("/:id", async (req, res) => {
-  //   try {
-  //     const { id } = req.params;
-  //     const account = await Accounts.remove(id);
-  //     if (account) {
-  //       console.log("an account has been found", account);
-  //       res.status(200).json(account);
-  //     } else {
-  //       res.status(404).json({
-  //         message: "no account with that id has been found",
-  //         error: err.message,
-  //       });
-  //     }
-  //   } catch (err) {
-  //     res.status(500).json({ message: err.message });
-  //   }
+  try {
+    const { id } = req.params;
+    const account = await Accounts.remove(id);
+    if (account) {
+      console.log("an account has been found", account);
+      res.status(200).json(account);
+    } else {
+      res.status(404).json({
+        message: "no account with that id has been found",
+        error: err.message,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 module.exports = router;

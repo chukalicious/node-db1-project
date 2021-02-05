@@ -18,10 +18,14 @@ function getById(id) {
   return db("accounts").where({ id });
 }
 
-function post() {}
+function post(account) {
+  return db("accounts")
+    .insert(account, "id")
+    .then((ids) => ({ id: ids[0] }));
+}
 
 function update() {}
 
 function remove(id) {
-  db("accounts").where({ id }).del();
+  db("accounts").where("id", Number(id)).del();
 }
